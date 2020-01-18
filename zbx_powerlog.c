@@ -113,15 +113,14 @@ int powerlog_register_value(AGENT_REQUEST *req, AGENT_RESULT *res)
         const char* type = get_rparam(req, 1);
 		powerlog_lock(item_timeout);
         if (strcasecmp(type, "int32") == 0) {
-            uint32_t reg = shm->parameters[index];
-            SET_UI64_RESULT(res, ntohl(reg));
+            uint32_t reg = 0;
+            uint16_t* raw = &shm->parameters[index];
+            reg = ntohs(*raw) << 16;
+            reg |= ntohs(*++raw);
+            SET_UI64_RESULT(res, reg);
             status = SYSINFO_RET_OK;
         } else if (strcasecmp(type, "float32") == 0) {
-            float reg = 0.0;
-            unsigned short* raw = (unsigned short*)&reg;
-            *raw = ntohs(shm->parameters[index]);
-            *++raw = ntohs(shm->parameters[++index]);
-            SET_DBL_RESULT(res, reg);
+            SET_DBL_RESULT(res, *(float*)(&shm->parameters[index]));
             status = SYSINFO_RET_OK;
         }
 		powerlog_unlock(item_timeout);
