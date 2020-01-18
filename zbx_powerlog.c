@@ -117,8 +117,10 @@ int powerlog_register_value(AGENT_REQUEST *req, AGENT_RESULT *res)
             SET_UI64_RESULT(res, ntohl(reg));
             status = SYSINFO_RET_OK;
         } else if (strcasecmp(type, "float32") == 0) {
-            unsigned short* raw = &shm->parameters[index];
-            uint32_t reg = ntohs(*raw) | (ntohs(*++raw) << 16);
+            float reg = 0.0;
+            unsigned short* raw = (unsigned short*)&reg;
+            *raw = ntohs(shm->parameters[index]);
+            *++raw = ntohs(shm->parameters[++index]);
             SET_DBL_RESULT(res, reg);
             status = SYSINFO_RET_OK;
         }
