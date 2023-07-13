@@ -22,4 +22,3 @@ ${ZBX_CONFIG_H}: ${ZBX_CONFIG_H}.in
 libzbx_powerlog.so: zbx_powerlog.c ${ZBX_INCLUDE}/config.h
 	${CC} ${CPPFLAGS} ${CFLAGS} -o zbx_powerlog.o -c zbx_powerlog.c
 	${CC} ${LDFLAGS} -o libzbx_powerlog.so zbx_powerlog.o -lrt
-
